@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.bmi_ds2bitb.screens
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -44,10 +45,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import br.senai.sp.jandira.bmi_ds2bitb.R
 
 @Composable
-fun UserDataScreen(modifier: Modifier = Modifier) {
+fun UserDataScreen(navController: NavHostController?) {
 
     var ageState = remember {
         mutableStateOf("")
@@ -60,6 +62,18 @@ fun UserDataScreen(modifier: Modifier = Modifier) {
     var heightState = remember {
         mutableStateOf("")
     }
+
+    // Abrir o arquivo usuario.xml 
+    // para recuperar o nome que o usuário digitou
+    // na tela anterior
+    val context = LocalContext.current
+    val sharedUserFile = context
+        .getSharedPreferences(
+            "usuario", Context.MODE_PRIVATE
+        )
+    val userName = sharedUserFile.getString(
+        "user_name", "Name not found!"
+    )
 
     Box(
         modifier = Modifier
@@ -80,7 +94,7 @@ fun UserDataScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(R.string.hi) + " !",
+                text = stringResource(R.string.hi) + " $userName!",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -297,7 +311,14 @@ fun UserDataScreen(modifier: Modifier = Modifier) {
                         )
                     }
                     Button(
-                        onClick = {},
+                        onClick = {
+                            val editor = sharedUserFile.edit()
+                            editor.putInt("user_age", ageState.value.trim().toInt())
+                            editor.putInt("user_height", heightState.value.trim().toInt())
+                            editor.putInt("user_weight", weightState.value.trim().toInt())
+                            editor.apply()
+                            navController!!.navigate("bmi_result")
+                        },
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .fillMaxWidth()
@@ -324,5 +345,5 @@ fun UserDataScreen(modifier: Modifier = Modifier) {
 )
 @Composable
 private fun UserDataScreenPreview() {
-    UserDataScreen()
+    UserDataScreen(null)
 }

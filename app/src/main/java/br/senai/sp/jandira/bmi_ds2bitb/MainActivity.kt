@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import br.senai.sp.jandira.bmi_ds2bitb.screens.BMIResultScreen
 import br.senai.sp.jandira.bmi_ds2bitb.screens.TelaInicial
 import br.senai.sp.jandira.bmi_ds2bitb.screens.UserDataScreen
 import br.senai.sp.jandira.bmi_ds2bitb.ui.theme.BMIDS2BITBTheme
@@ -21,16 +22,21 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     navController = navController,
                     startDestination = "home"
-                ){
+                ) {
                     composable(
                         route = "home"
-                    ){
+                    ) {
                         TelaInicial(navController)
                     }
                     composable(
                         route = "user_data"
-                    ){
-                        UserDataScreen()
+                    ) {
+                        UserDataScreen(navController)
+                    }
+                    composable(
+                        route = "bmi_result"
+                    ) {
+                        BMIResultScreen(navController)
                     }
                 }
 
