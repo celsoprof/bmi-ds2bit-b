@@ -67,8 +67,8 @@ fun UserDataScreen(modifier: Modifier = Modifier) {
             .background(
                 brush = Brush.horizontalGradient(
                     listOf(
-                        Color(0xFF009688),
-                        Color(0xFF8BC34A)
+                        Color(0xFFCDDC39),
+                        Color(0xFFFF5722)
                     )
                 )
             )
